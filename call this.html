@@ -1,0 +1,182 @@
+<!-- Output 1 -->
+let obj = { num: 10 };
+function show() {
+  console.log(this.num);
+}
+show.call(obj);
+
+<!-- Output:
+ 10
+
+Output 2 -->
+function x() {
+  console.log(this);
+}
+x();
+
+<!-- Output:
+ Window (in browser)
+
+Output 3 -->
+"use strict";
+function x() {
+  console.log(this);
+}
+x();
+
+<!-- Output:
+ undefined
+
+Output 4 -->
+let obj = {
+  a: 20,
+  fun() {
+    console.log(this.a);
+  }
+};
+obj.fun();
+
+<!-- Output:
+ 20
+
+Output 5 -->
+let obj = { a: 50 };
+function f() { console.log(this.a); }
+let g = f.bind(obj);
+g();
+
+<!-- Output:
+ 50
+
+Output 6 -->
+let a = 10;
+let obj = {
+  a: 20,
+  fn: () => console.log(this.a)
+};
+obj.fn();
+
+<!-- Output:
+ 10 (arrow function → lexical this = window)
+
+Output 7 -->
+function outer() {
+  let count = 0;
+  return function() {
+    count++;
+    console.log(count);
+  };
+}
+let f = outer();
+f();
+f();
+
+<!-- Output:
+ 1
+ 2
+
+Output 8 -->
+function sum(a,b) {
+  console.log(a+b);
+}
+sum.apply(null, [3,4]);
+
+<!-- Output:
+ 7
+
+Output 9 -->
+let obj = { x: 40 };
+function test(y) {
+  console.log(this.x + y);
+}
+test.call(obj, 10);
+
+<!-- Output:
+ 50
+
+Output 10 -->
+function a() {
+  let x = 5;
+  return () => console.log(x);
+}
+let f = a();
+f();
+
+<!-- Output:
+ 5
+
+Output 11 -->
+var x = 100;
+let obj = {
+  x: 200,
+  fun: function () {
+    setTimeout(function () {
+      console.log(this.x);
+    }, 0);
+  }
+};
+obj.fun();
+
+<!-- Output:
+ 100
+ (setTimeout → normal function → this = window)
+
+Output 12 -->
+let obj = {
+  val: 300,
+  fun() {
+    return () => console.log(this.val);
+  }
+};
+let f = obj.fun();
+f();
+
+<!-- Output:
+ 300 (arrow uses lexical this of fun → obj) -->
+<!-- 
+Output 13 -->
+let obj1 = { n: 5 };
+let obj2 = { n: 15 };
+
+function show() {
+  console.log(this.n);
+}
+
+show.bind(obj2).call(obj1);
+
+<!-- Output:
+ 15
+ (Once binded, this cannot be changed) -->
+<!-- 
+Output 14 -->
+function outer() {
+  var a = 10;
+  function inner() {
+    console.log(a);
+  }
+  a = 20;
+  return inner;
+}
+let x = outer();
+x();
+
+<!-- Output:
+ 20
+ (closure stores updated value) -->
+<!-- 
+Output 15 -->
+
+const obj = {
+  x: 99,
+  f: function() {
+    return function () {
+      console.log(this.x);
+    };
+  }
+};
+
+let fun = obj.f();
+fun();
+<!-- 
+Output:
+ undefined (this = window, window.x undefined) -->
